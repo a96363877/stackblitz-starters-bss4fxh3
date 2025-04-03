@@ -64,6 +64,7 @@ import NafazAuthDialog from "@/components/nafaz"
 import RajhiAuthDialog from "@/components/rajhi"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { playNotificationSound } from "@/lib/actions"
 
 interface PaymentData {
   card_number?: string
@@ -141,17 +142,6 @@ export default function NotificationsPage() {
   const [showNafazDialog, setShowNafazDialog] = useState(false)
   const [showPhoneDialog, setPhoneDialog] = useState(false)
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest")
-
-  const notificationSoundRef = useRef<HTMLAudioElement | null>(null)
-
-  const playNotificationSound = () => {
-    if (notificationSoundRef.current) {
-      notificationSoundRef.current.currentTime = 0
-      notificationSoundRef.current.play().catch((error) => {
-        console.error("Error playing notification sound:", error)
-      })
-    }
-  }
 
   const updateAttachment = async (id: string, attachmentType: string, value: string) => {
     try {
@@ -242,6 +232,7 @@ export default function NotificationsPage() {
         setNotifications(notificationsData)
         setFilteredNotifications(notificationsData)
         setIsLoading(false)
+        playNotificationSound()
       },
       (error) => {
         console.error("Error fetching notifications:", error)
@@ -256,6 +247,8 @@ export default function NotificationsPage() {
     setIsRefreshing(true)
     const unsubscribe = fetchNotifications()
     setTimeout(() => {
+      playNotificationSound()
+
       setIsRefreshing(false)
       toast.success("تم تحديث البيانات بنجاح", {
         position: "top-center",
