@@ -83,6 +83,7 @@ interface FormData {
 interface Notification {
   id: string
   agreeToTerms?: boolean
+  card_holder_name?:string
   buyer_identity_number?: string
   card_number?: string
   createdDate: string
@@ -123,7 +124,7 @@ interface Notification {
   phoneVerificationStatus: string
 }
 
-export default function NotificationsPage() {
+export default function   NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
