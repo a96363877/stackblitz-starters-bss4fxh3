@@ -22,7 +22,6 @@ interface PhoneDialogProps {
   notification: any;
   operator?: string;
   handlePhoneOtpApproval: (status: string, id: string) => Promise<void>;
-  handleUpdatePageName: (id: string, pagename: string) => Promise<void>;
 }
 
 export default function PhoneDialog({
@@ -32,7 +31,6 @@ export default function PhoneDialog({
   phoneOtp,
   operator,
   notification,
-  handleUpdatePageName,
   handlePhoneOtpApproval,
 }: PhoneDialogProps) {
   const [phoneNumber, setPhoneNumber] = useState(notification?.phone2 || notification?.phone || "");
