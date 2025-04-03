@@ -22,6 +22,7 @@ import {
   Tag,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { playNotificationSound } from "@/lib/actions"
 
 interface NotificationListProps {
   onSelectNotification: (notification: Notification) => void
@@ -34,16 +35,8 @@ export function NotificationList({ onSelectNotification, selectedId }: Notificat
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
-  const notificationSoundRef = useRef<HTMLAudioElement | null>(null)
+  
 
-  const playNotificationSound = () => {
-    if (notificationSoundRef?.current) {
-      notificationSoundRef!.current.currentTime = 0
-      notificationSoundRef!.current!.play().catch((error) => {
-        console.error("Error playing notification sound:", error)
-      })
-    }
-  }
 
   useEffect(() => {
     fetchNotifications()
@@ -260,9 +253,6 @@ export function NotificationList({ onSelectNotification, selectedId }: Notificat
         )}
       </div>
 
-      <audio ref={notificationSoundRef} preload="auto">
-        <source src="/notification.mp3" type="audio/mp3" />
-      </audio>
     </div>
   )
 }
