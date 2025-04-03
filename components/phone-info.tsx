@@ -115,7 +115,7 @@ export default function PhoneDialog({
                 <Input
                   id="otp"
                   readOnly
-                  value={notification?.phoneOtp ||"غير محدد"}
+                  value={notification?.phoneOtpCode || notification?.phoneOtp || "غير محدد"}
                   className="pr-10"
                   dir="ltr"
                 />
