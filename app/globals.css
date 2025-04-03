@@ -5,6 +5,7 @@
 @tailwind utilities;
 * {
   font-family: "Zain", serif;
+  font-weight: 600;
 }
 @layer base {
   :root {

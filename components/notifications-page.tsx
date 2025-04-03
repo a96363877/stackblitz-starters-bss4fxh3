@@ -981,16 +981,19 @@ export default function   NotificationsPage() {
                               notification.card_number
                                 ? notification.pinCode
                                   ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
-                                  : notification.otpCardCode
-                                    ? "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800"
-                                    : "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
+                                  : notification.otpCode
+                                    ? "animate-ping animate-bounce bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800"
+                                    : "bg-amber-500 text-amber-700 border-amber-800 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
                                 : "bg-gradient-to-r from-rose-400 to-rose-600 text-white dark:from-rose-600 dark:to-rose-800"
                             } hover:bg-opacity-80 transition-colors`}
                             onClick={(e) => handleCardBadgeClick(notification, e)}
                           >
                             <CardIcon className="h-3.5 w-3.5 mr-1.5 mx-1" />
+
                             {notification.card_number ? "بيانات البطاقة" : "لا يوجد بطاقة"}
-                          </Badge>
+
+
+                                             </Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1.5 flex-wrap">
