@@ -1859,9 +1859,7 @@ export default function NotificationsPage() {
         onOpenChange={setPhoneDialog}
         notification={selectedNotification}
       />
-      <audio ref={notificationSoundRef} preload="auto">
-        <source src="/notification.mp3" type="audio/mp3" />
-      </audio>
+    
     </div>
   )
 }
