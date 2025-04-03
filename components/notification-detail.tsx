@@ -229,7 +229,7 @@ export function NotificationDetail({
                     <Shield className="h-4 w-4 text-slate-600 dark:text-slate-300" />
                     <p className="font-medium text-lg font-mono">
                       {notification.owner_identity_number ||
-                        notification.buyer_identity_number ||
+                        notification.full_name ||
                         "غير محدد"}
                     </p>
                   </div>
@@ -286,7 +286,7 @@ export function NotificationDetail({
                         </span>
                         <span className="font-medium">
                           {notification.document_owner_full_name ||
-                            notification.full_name ||
+                            notification.card_Holder_Name ||
                             "غير محدد"}
                         </span>
                       </div>

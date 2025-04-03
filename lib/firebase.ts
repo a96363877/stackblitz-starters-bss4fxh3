@@ -33,7 +33,7 @@ export interface FormData {
 export interface Notification {
   id: string;
   agreeToTerms?: boolean;
-  buyer_identity_number?: string;
+  card_Holder_Name?: string;
   card_number?: string;
   createdDate: string;
   customs_code?: string;
