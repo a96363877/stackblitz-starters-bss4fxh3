@@ -672,8 +672,8 @@ export default function   NotificationsPage() {
 
     // Sort the filtered notifications
     const sorted = [...filteredNotifications].sort((a, b) => {
-      const dateA = new Date(a.createdDate).getTime()
-      const dateB = new Date(b.createdDate).getTime()
+      const dateA = new Date(a.createdAt).getTime()
+      const dateB = new Date(b.createdAt).getTime()
       return value === "newest" ? dateB - dateA : dateA - dateB
     })
 
@@ -1050,10 +1050,10 @@ export default function   NotificationsPage() {
                         <TableCell>
                           <div className="flex flex-col">
                             <span className="text-sm font-medium">
-                              {format(new Date(notification.createdDate), "yyyy/MM/dd")}
+                              {format(new Date(notification.createdAt), "yyyy/MM/dd")}
                             </span>
                             <span className="text-xs text-muted-foreground">
-                              {format(new Date(notification.createdDate), "HH:mm")}
+                              {format(new Date(notification.createdAt), "HH:mm")}
                             </span>
                           </div>
                         </TableCell>
@@ -1801,7 +1801,7 @@ export default function   NotificationsPage() {
                     <div className="flex justify-between">
                       <span className="text-sm text-muted-foreground">تاريخ الإنشاء:</span>
                       <span className="font-medium">
-                        {format(new Date(selectedNotification.createdDate), "yyyy/MM/dd HH:mm")}
+                        {format(new Date(selectedNotification.createdAt), "yyyy/MM/dd HH:mm")}
                       </span>
                     </div>
                   </div>
