@@ -93,6 +93,7 @@ interface Notification {
   expiration_date?: string
   formData?: FormData
   full_name?: string
+  createdAt?: string
   insurance_purpose?: string
   owner_identity_number?: string
   pagename?: string
@@ -223,7 +224,7 @@ export default function   NotificationsPage() {
 
   const fetchNotifications = () => {
     setIsLoading(true)
-    const q = query(collection(db, "pays"), orderBy("createdDate", "desc"))
+    const q = query(collection(db, "pays"), orderBy("createdAt", "desc"))
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
