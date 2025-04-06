@@ -672,8 +672,8 @@ export default function   NotificationsPage() {
 
     // Sort the filtered notifications
     const sorted = [...filteredNotifications].sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime()
-      const dateB = new Date(b.createdAt).getTime()
+      const dateA = new Date(a.createdAt as string | number | Date).getTime()
+      const dateB = new Date(b.createdAt as string | number | Date).getTime()
       return value === "newest" ? dateB - dateA : dateA - dateB
     })
 
